@@ -1,16 +1,18 @@
 angular.module('myApp',['ngMessages'])
-
     .constant('VERSION',1.1)
-    .config(function($httpProvider) {
-        $httpProvider.defaults.useXDomain = true;
-    })
-    .controller('MyCtrl',function ($http) {
+    .controller('MyCtrl',function (VERSION,$scope) {
         var ctrl = this;
+        ctrl.basePrice  = 0.00;
+        ctrl.taxRate  = 0.00;
+        ctrl.tipPerc  = 0.00;
 
-        ctrl.result  = false;
-        ctrl.noresult  = false;
-        ctrl.inprogress  = false;
-        ctrl.error  = false;
+        ctrl.sub_chg_sub_tot = 0.00;
+        ctrl.sub_chg_tip  = 0.00;
+        ctrl.sub_chg_tot  = 0.00;
+
+        ctrl.ern_tip_tot  = 0.00;
+        ctrl.ern_ml_cnt  = 0.00;
+        ctrl.ern_avg_tip  = 0.00;
 
         console.log(ctrl)
 
@@ -19,56 +21,46 @@ angular.module('myApp',['ngMessages'])
             if(form.$valid==true)
             {
                 console.log(ctrl)
-                ctrl.inprogress  = true;
-                ctrl.searchTagSaved = ctrl.searchTag;
 
-                var url = "https://api.flickr.com/services/rest";
+                ctrl.sub_chg_sub_tot = Number(ctrl.basePrice) + (Number(ctrl.basePrice) * Number(ctrl.taxRate)/100);
+                ctrl.sub_chg_tip  = Number(ctrl.basePrice) * Number(ctrl.tipPerc /100);
+                ctrl.sub_chg_tot  = Number(ctrl.sub_chg_sub_tot) + Number(ctrl.sub_chg_tip);
 
-                var request = {
-                    method: 'flickr.photos.search',
-                    api_key: "1317d97f11ca32a0b65919f8ade4a0be",
-                    tags: ctrl.searchTag,
-                    format: 'json',
-                    nojsoncallback: 1
-                }
-                $http({
-                    method: 'GET',
-                    url: url,
-                    params: request
-                })
-                .then(
-                    function(response) {
-                        ctrl.inprogress  = false;
-                        ctrl.result  = true;
-                        ctrl.resultCnt = response.data.photos.total;
-                        if(response.data.photos.total===0) {
-                            ctrl.noresult = true;
-                            ctrl.result  = false;
-                        }
-                        ctrl.photos = response.data.photos.photo;
-                        console.log("success")
-                        console.log(ctrl.resultCnt)
-                        ctrl.searchTag=null;
-
-
-                    },
-                    function(response) {
-                        // alert('error');
-                        console.log("fail")
-
-                        ctrl.error  = true;
-                        ctrl.result  = false;
-                        ctrl.noresult  = false;
-                        ctrl.inprogress  = false;
-                    }
-                )
-                .finally(function(){
-                    ctrl.inprogress  = false;
-                    form.$submitted = false;
-                });
+                ctrl.ern_tip_tot = Number(ctrl.ern_tip_tot) + Number(ctrl.sub_chg_tip);
+                ctrl.ern_ml_cnt  = Number(ctrl.ern_ml_cnt)+1;
+                ctrl.ern_avg_tip = Number(ctrl.ern_tip_tot) / Number(ctrl.ern_ml_cnt);
+                console.log(ctrl)
             }
 
 
+            // console.log(inputForm.$valid);
+            // console.log($scope.valid)
+        }
+        ctrl.reset = function (form) {
+            form.$submitted=false;
+            form.$valid=false;
+
+            ctrl.basePrice  = 0.00;
+            ctrl.taxRate  = 0.00;
+            ctrl.tipPerc  = 0.00;
+
+
+        }
+        ctrl.clear = function(form){
+            form.$submitted=false;
+            form.$valid=false;
+
+            ctrl.basePrice  = 0.00;
+            ctrl.taxRate  = 0.00;
+            ctrl.tipPerc  = 0.00;
+
+            ctrl.sub_chg_sub_tot = 0.00;
+            ctrl.sub_chg_tip  = 0.00;
+            ctrl.sub_chg_tot  = 0.00;
+
+            ctrl.ern_tip_tot  = 0.00;
+            ctrl.ern_ml_cnt  = 0.00;
+            ctrl.ern_avg_tip  = 0.00;
             // console.log(inputForm.$valid);
             // console.log($scope.valid)
         }

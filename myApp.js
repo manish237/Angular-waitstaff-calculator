@@ -1,67 +1,145 @@
-angular.module('myApp',['ngMessages'])
-    .constant('VERSION',1.1)
-    .controller('MyCtrl',function (VERSION,$scope) {
-        var ctrl = this;
-        ctrl.basePrice  = 0.00;
-        ctrl.taxRate  = 0.00;
-        ctrl.tipPerc  = 0.00;
+angular.module('myApp',['ngMessages','ngRoute'])
+    .config(['$routeProvider','$locationProvider',function ($routeProvider,$locationProvider) {
+        $locationProvider.hashPrefix('');
+        $routeProvider
+            .when('/',{
+                templateUrl: './Home.html',
+                controller : 'HomeCtrl',
+                controllerAs: 'ctrl'
+            })
+            .when('/Home',{
+                templateUrl: './Home.html',
+                controller : 'HomeCtrl',
+                controllerAs: 'ctrl'
+            })
+            .when('/NewMeal',{
+                templateUrl: './NewMeal.html',
+                controller : 'NewMealCtrl',
+                controllerAs: 'ctrl1'
+            })
+            .when('/MyEarnings',{
+                templateUrl: './MyEarnings.html',
+                controller : 'MyEarningsCtrl',
+                controllerAs: 'ctrl2'
+            })
+            .when('/error', {
+                template : '<p>Error Page Not Found</p>'
+            })
+            .otherwise('/Home');
+    }])
+    .run(['$rootScope','$location', function($rootScope, $location) {
+        $rootScope.$on('$routeChangeError', function() {
+            $location.path('/error');
+        });
+    }])
+    .controller('HomeCtrl',['$scope','$rootScope',function ($scope, $rootScope) {
+        console.log("HomeCtrl");
 
-        ctrl.sub_chg_sub_tot = 0.00;
-        ctrl.sub_chg_tip  = 0.00;
-        ctrl.sub_chg_tot  = 0.00;
+        $rootScope.basePrice  = 0.00;
+        $rootScope.taxRate  = 0.00;
+        $rootScope.tipPerc  = 0.00;
 
-        ctrl.ern_tip_tot  = 0.00;
-        ctrl.ern_ml_cnt  = 0.00;
-        ctrl.ern_avg_tip  = 0.00;
+        $rootScope.sub_chg_sub_tot = 0.00;
+        $rootScope.sub_chg_tip  = 0.00;
+        $rootScope.sub_chg_tot  = 0.00;
 
-        console.log(ctrl)
+        $rootScope.ern_tip_tot  = 0.00;
+        $rootScope.ern_ml_cnt  = 0.00;
+        $rootScope.ern_avg_tip  = 0.00;
 
-        ctrl.submit = function(form){
-            console.log(form.$valid)
+        $rootScope.form_valid = false;
+        $rootScope.form_submit = false;
+
+        // console.log($rootScope)
+
+
+    }])
+    .controller('NewMealCtrl',['$scope','$rootScope',function ($scope, $rootScope) {
+
+        console.log("NewMealCtrl");
+        //
+        // console.log($scope)
+        // console.log($rootScope)
+
+        $scope.basePrice  = 0.00;
+        $scope.taxRate  = 0.00;
+        $scope.tipPerc  = 0.00;
+
+        $scope.sub_chg_sub_tot = 0.00;
+        $scope.sub_chg_tip  = 0.00;
+        $scope.sub_chg_tot  = 0.00;
+
+        $scope.submit = function(form){
+            // console.log($scope)
+            // console.log(form.$valid)
             if(form.$valid==true)
             {
-                console.log(ctrl)
+                $rootScope.form_valid = form.$valid;
+                $rootScope.form_submit = form.$submitted;
 
-                ctrl.sub_chg_sub_tot = Number(ctrl.basePrice) + (Number(ctrl.basePrice) * Number(ctrl.taxRate)/100);
-                ctrl.sub_chg_tip  = Number(ctrl.basePrice) * Number(ctrl.tipPerc /100);
-                ctrl.sub_chg_tot  = Number(ctrl.sub_chg_sub_tot) + Number(ctrl.sub_chg_tip);
+                // console.log($scope)
 
-                ctrl.ern_tip_tot = Number(ctrl.ern_tip_tot) + Number(ctrl.sub_chg_tip);
-                ctrl.ern_ml_cnt  = Number(ctrl.ern_ml_cnt)+1;
-                ctrl.ern_avg_tip = Number(ctrl.ern_tip_tot) / Number(ctrl.ern_ml_cnt);
-                console.log(ctrl)
+                $scope.sub_chg_sub_tot = Number($scope.basePrice) + (Number($scope.basePrice) * Number($scope.taxRate)/100);
+                $rootScope.sub_chg_sub_tot = $scope.sub_chg_sub_tot;
+
+                $scope.sub_chg_tip  = Number($scope.basePrice) * Number($scope.tipPerc /100);
+                $rootScope.sub_chg_tip = $scope.sub_chg_tip
+
+                $scope.sub_chg_tot  = Number($scope.sub_chg_sub_tot) + Number($scope.sub_chg_tip);
+                $rootScope.sub_chg_tot = $scope.sub_chg_tot
+
+                $rootScope.ern_tip_tot = Number($rootScope.ern_tip_tot) + Number($rootScope.sub_chg_tip);
+                $rootScope.ern_ml_cnt  = Number($rootScope.ern_ml_cnt)+1;
+                $rootScope.ern_avg_tip = Number($rootScope.ern_tip_tot) / Number($rootScope.ern_ml_cnt);
+                // console.log($rootScope)
             }
 
 
             // console.log(inputForm.$valid);
             // console.log($scope.valid)
         }
-        ctrl.reset = function (form) {
+        $scope.reset = function (form) {
+            console.log("resetting")
             form.$submitted=false;
             form.$valid=false;
 
-            ctrl.basePrice  = 0.00;
-            ctrl.taxRate  = 0.00;
-            ctrl.tipPerc  = 0.00;
+            $scope.basePrice  = 0.00;
+            $scope.taxRate  = 0.00;
+            $scope.tipPerc  = 0.00;
 
-
+            $scope.sub_chg_sub_tot = 0.00;
+            $scope.sub_chg_tip  = 0.00;
+            $scope.sub_chg_tot  = 0.00;
         }
-        ctrl.clear = function(form){
-            form.$submitted=false;
-            form.$valid=false;
 
-            ctrl.basePrice  = 0.00;
-            ctrl.taxRate  = 0.00;
-            ctrl.tipPerc  = 0.00;
+    }])
+    .controller('MyEarningsCtrl',['$scope','$rootScope',function ($scope, $rootScope) {
+        // console.log($rootScope)
 
-            ctrl.sub_chg_sub_tot = 0.00;
-            ctrl.sub_chg_tip  = 0.00;
-            ctrl.sub_chg_tot  = 0.00;
+        $scope.ern_tip_tot = $rootScope.ern_tip_tot;
+        $scope.ern_ml_cnt = $rootScope.ern_ml_cnt;
+        $scope.ern_avg_tip = $rootScope.ern_avg_tip;
 
-            ctrl.ern_tip_tot  = 0.00;
-            ctrl.ern_ml_cnt  = 0.00;
-            ctrl.ern_avg_tip  = 0.00;
+        $scope.clear = function(){
+            $rootScope.form_valid = false;
+            $rootScope.form_submit = false;
+
+            $rootScope.basePrice  = 0.00;
+            $rootScope.taxRate  = 0.00;
+            $rootScope.tipPerc  = 0.00;
+
+            $rootScope.sub_chg_sub_tot = 0.00;
+            $rootScope.sub_chg_tip  = 0.00;
+            $rootScope.sub_chg_tot  = 0.00;
+
+            $rootScope.ern_tip_tot  = 0.00;
+            $rootScope.ern_ml_cnt  = 0.00;
+            $rootScope.ern_avg_tip  = 0.00;
+            $scope.ern_tip_tot  = 0.00;
+            $scope.ern_ml_cnt  = 0.00;
+            $scope.ern_avg_tip  = 0.00;
+
             // console.log(inputForm.$valid);
             // console.log($scope.valid)
         }
-    });
+    }])

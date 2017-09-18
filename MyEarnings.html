@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="row" id="empty-row-1"></div>
+<div class="row text-center" id="earning-info-head">
+    <h3 id="earn-head-text">My Earnings for this Shift</h3>
+</div>
+<div class="row" id="earning-info">
 
-</body>
-</html>
+    <p id="earn-tiptot-text">Tip Total : {{ern_tip_tot}}</p>
+    <p id="earn-mealcnt-text">Meal Count : {{ern_ml_cnt}}</p>
+    <p id="earn-avgtip-text">Avg Tip per Meal Count : {{ern_avg_tip}}</p>
+</div>
+<div class="row text-center" id="reset-sec">
+    <input type="button" class="form-control" value="Reset" id="btn-reset" ng-click="clear()">
+</div>

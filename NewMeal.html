@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="row text-center" id="form-head-sec">
+    <h3 id="form-head-text">Enter Meal Details</h3>
+</div>
+<div class="row" id="form-sec">
+    <form class="form-horizontal" id="form-calc" name="inputForm" novalidate ng-submit="submit(inputForm)">
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="basePrice">Base Meal Price: $</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="basePrice" name="basePrice" placeholder="9.99" required  ng-model="basePrice" ng-pattern="/^[1-9]+[0-9]*(\.[0-9]{1,2})?$/">
+                <div ng-if="inputForm.$submitted" ng-messages="inputForm.basePrice.$error">
+                    <span class="error" ng-message="required">Field is required!</span>
+                    <span class="error" ng-message="pattern">Only Non-Zero Numbers allowed</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="taxRate">Tax Rate: %</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="taxRate" name="taxRate" required ng-model="taxRate" ng-pattern="/^[1-9]+[0-9]*(\.[0-9]{1,2})?$/">
+                <div ng-if="inputForm.$submitted" ng-messages="inputForm.taxRate.$error">
+                    <span class="error" ng-message="required">Field is required!</span>
+                    <span class="error" ng-message="pattern">Only Non-Zero Numbers allowed</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="tipPerc">Tip Percentage: %</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="tipPerc" name="tipPerc" required ng-model="tipPerc" ng-pattern="/^[1-9]+[0-9]*(\.[0-9]{1,2})?$/">
+                <div ng-if="inputForm.$submitted" ng-messages="inputForm.tipPerc.$error">
+                    <span class="error" ng-message="required">Field is required!</span>
+                    <span class="error" ng-message="pattern">Only Non-Zero Numbers allowed</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-1 text-center">
+                <button type="submit" class="btn btn-default" id="btn-submit" ng->Submit</button>
+                <button type="button" class="btn btn-default" id="btn-cancel" ng-click="reset(inputForm)">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row" id="form-sec-empty">
+</div>
+<div class="row text-center" id="customer-charge-head">
+    <h3 id="charge-head-text">Customer Charges</h3>
+</div>
+<div class="row" id="customer-charge">
+    <p id="charge-subtot-text">Subtotal : {{sub_chg_sub_tot}}</p>
+    <p id="charge-tip-text">Tip : {{sub_chg_tip}}</p>
+    <p id="charge-line-text">------------------------</p>
+    <p id="charge-tot-text">Total : {{sub_chg_tot}}</p>
+</div>

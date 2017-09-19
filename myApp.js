@@ -1,4 +1,4 @@
-angular.module('myApp',['ngMessages','ngRoute'])
+angular.module('myApp',['ngMessages','ngRoute', 'ngAnimate'])
     .config(['$routeProvider','$locationProvider',function ($routeProvider,$locationProvider) {
         $locationProvider.hashPrefix('');
         $routeProvider
@@ -27,9 +27,17 @@ angular.module('myApp',['ngMessages','ngRoute'])
             })
             .otherwise('/Home');
     }])
-    .run(['$rootScope','$location', function($rootScope, $location) {
+    .run(['$rootScope', '$location', '$timeout', function($rootScope, $location ,$timeout) {
         $rootScope.$on('$routeChangeError', function() {
             $location.path('/error');
+        });
+        $rootScope.$on('$routeChangeStart', function() {
+            $rootScope.isLoading = true;
+        });
+        $rootScope.$on('$routeChangeSuccess', function() {
+            $timeout(function() {
+                $rootScope.isLoading = false;
+            }, 1000);
         });
     }])
     .controller('HomeCtrl',['$scope','$rootScope',function ($scope, $rootScope) {
